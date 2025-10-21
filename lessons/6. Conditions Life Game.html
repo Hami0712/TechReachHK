@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TechReach HK - Conditions Life Game</title>
+<style>
+  :root{
+    --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --panel:#ffffff;      
+    --ink:#0f172a;        
+    --muted:#475569;      
+    --accent:#2563eb;     
+    --accent-2:#22c55e;   
+    --accent-3:#f59e0b;   
+    --accent-4:#ef4444;   
+    --accent-5:#8b5cf6;   
+    --line:#cbd5e1;       
+    --chip:#eef2ff;
+    --shadow: 0 10px 25px rgba(0,0,0,0.1);
+    --shadow-hover: 0 20px 40px rgba(0,0,0,0.15);
+    --good:#16a34a; 
+    --bad:#dc2626; 
+    --warn:#b45309; 
+    --gold:#f59e0b;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:var(--bg); color:var(--ink); font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; min-height:100vh; }
+  body{ font-size:18px; line-height:1.55; }
+  .wrap{max-width:1200px; margin-inline:auto; padding:24px;}
+  header{
+    display:flex; align-items:center; gap:20px; margin-bottom:32px; 
+    background:rgba(255,255,255,0.95); padding:24px; border-radius:20px; 
+    box-shadow:var(--shadow); backdrop-filter:blur(10px);
+  }
+  header .logo{
+    width:60px;height:60px; border-radius:16px; 
+    background:linear-gradient(135deg,var(--accent),#60a5fa); 
+    display:grid; place-items:center; color:#fff; font-weight:800; font-size:24px;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+  }
+  h1{font-size:clamp(28px,4vw,42px); margin:0; background:linear-gradient(135deg,var(--accent),var(--accent-2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;}
+  .subtitle{color:var(--muted); margin-top:8px; font-size:18px;}
+  
+  /* Language toggle */
+  .lang-toggle{
+    margin-left:auto; display:flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,0.1); padding:8px 16px; 
+    border-radius:20px; border:1px solid rgba(255,255,255,0.2);
+    backdrop-filter:blur(10px); transition:all 0.3s ease;
+  }
+  .lang-toggle:hover{background:rgba(255,255,255,0.2);}
+  .lang-toggle button{
+    background:none; border:none; color:var(--ink); font-size:14px; 
+    font-weight:600; padding:4px 8px; border-radius:8px; 
+    cursor:pointer; transition:all 0.2s ease;
+  }
+  .lang-toggle button.active{
+    background:var(--accent); color:#fff; box-shadow:0 2px 8px rgba(37, 99, 235, 0.3);
+  }
+  .lang-toggle button:not(.active):hover{
+    background:rgba(37, 99, 235, 0.1); color:var(--accent);
+  }
+  
+  /* Navigation buttons - consistent sizing */
+  .back-btn, .next-lesson-btn, .back-to-index-btn{
+    background:var(--accent); color:#fff; border:none; padding:12px 20px; 
+    border-radius:12px; font-weight:600; cursor:pointer; transition:all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    min-width: 140px; height: 48px; justify-content: center;
+  }
+  .back-btn:hover{
+    background:#1d4ed8; transform:translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+  }
+  .next-lesson-btn{ background:var(--accent-5); box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); }
+  .next-lesson-btn:hover{ background:#7c3aed; transform:translateY(-2px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4); }
+  .back-to-index-btn{ background:var(--accent-2); box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); }
+  .back-to-index-btn:hover{ background:#16a34a; transform:translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4); }
+  
+  main{ max-width:980px; margin:0 auto; padding:16px; }
+  .card{ 
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    backdrop-filter: blur(5px); border:2px solid var(--line); border-radius:16px; 
+    padding:20px; margin:12px 0; box-shadow:var(--shadow); transition:all 0.3s ease;
+  }
+  .card:hover{ transform:translateY(-2px); box-shadow:var(--shadow-hover); }
+  .row{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  button{ font-size:18px; padding:10px 14px; border-radius:10px; border:2px solid #0f172a; background:#fff; color:#0f172a; }
+  button:hover{ outline:3px solid var(--accent); cursor:pointer; }
+  button:focus{ outline:4px solid var(--accent); }
+  .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#fff; border-radius:6px; padding:2px 6px; border:1px solid #0f172a; }
+  .story{ background:#fff; border:2px dashed #0f172a; border-radius:12px; padding:16px; margin:12px 0; }
+  .options{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+  .opt{ padding:8px 12px; border-radius:10px; border:2px solid #0f172a; background:#fff; cursor:pointer; text-align:left; line-height:1.4; }
+  .opt.correct{ background:#dcfce7; }
+  .opt.wrong{ background:#fee2e2; }
+  .opt small{ display:block; color:var(--muted); font-size:14px; margin-top:4px; font-weight:normal; }
+  .code{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#fff; border-radius:10px; padding:10px; border:2px dashed #0f172a; }
+  .good{ color:var(--good); font-weight:700; }
+  .bad{ color:var(--bad); font-weight:700; }
+  .hidden{ display:none; }
+  /* Level badge */
+  .level-badge{ display:inline-block; font-weight:700; padding:6px 10px; border-radius:10px; background:#fff; border:2px solid var(--line); box-shadow:var(--shadow); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo" aria-hidden="true">🌍</div>
+      <div>
+        <h1 data-en="Conditions Life Game" data-zh="條件生活遊戲">Conditions Life Game</h1>
+        <div class="subtitle" data-en="Learn if, elif, else, and while with real examples" data-zh="通過真實例子學習 if、elif、else 和 while">Learn if, elif, else, and while with real examples</div>
+      </div>
+      <div class="lang-toggle">
+        <button class="active" onclick="switchLanguage('en')">EN</button>
+        <button onclick="switchLanguage('zh')">繁中</button>
+      </div>
+    </header>
+    
+    <div style="margin-bottom: 20px; display: flex; gap: 12px; align-items: center;">
+      <a href="5. Pattern Game.html" class="back-btn">
+        ← <span data-en="Previous Lesson" data-zh="上一課">Previous Lesson</span>
+      </a>
+      <button id="nextLessonBtn" class="next-lesson-btn" data-en="Next Lesson →" data-zh="下一課 →">Next Lesson →</button>
+      <button id="backToIndexBtn" class="back-to-index-btn" data-en="Back to All Lessons" data-zh="返回首頁">Back to All Lessons</button>
+      <span id="lvl" class="level-badge" aria-live="polite">Level 1 / 6</span>
+    </div>
+
+<main>
+  <div class="card">
+    <p data-en="<strong>Learn:</strong> <em>Conditional Logic & Decision Making</em> — use <code>if</code>, <code>elif</code>, <code>else</code>, and <code>while</code> to make decisions in code.<br/><strong>Why it matters:</strong> Conditions help programs respond to different situations and make smart decisions automatically." data-zh="<strong>學習：</strong> <em>條件邏輯與決策制定</em> — 使用<code>if</code>、<code>elif</code>、<code>else</code>和<code>while</code>在程式碼中做決定。<br/><strong>為什麼重要：</strong> 條件幫助程式回應不同情況並自動做出明智決定。"><strong>Learn:</strong> <em>Conditional Logic & Decision Making</em> — use <code>if</code>, <code>elif</code>, <code>else</code>, and <code>while</code> to make decisions in code.<br/><strong>Why it matters:</strong> Conditions help programs respond to different situations and make smart decisions automatically.</p>
+  </div>
+
+  <div class="card">
+    <div id="storyCard" class="story">
+      <h3 id="storyTitle">Loading...</h3>
+      <p id="storyText"></p>
+      <div id="storyOptions" class="options"></div>
+      <div id="storyFeedback" class="muted"></div>
+    </div>
+
+    <div id="codeCard" class="story hidden">
+      <h3 data-en="Write the code:" data-zh="寫程式碼：">Write the code:</h3>
+      <p id="codePrompt"></p>
+      <textarea id="code" style="width:100%; height:160px; border:2px solid #0f172a; border-radius:10px; padding:10px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:16px;" placeholder="if raining():
+  take_umbrella()
+else:
+  leave_umbrella()"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button id="checkCodeBtn" data-en="Check Code" data-zh="檢查程式碼">Check Code</button>
+        <button id="resetCodeBtn" data-en="Reset" data-zh="重置">Reset</button>
+        <div id="codeFeedback" class="muted"></div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+      <button id="nextBtn" class="hidden" data-en="Next Level" data-zh="下一關">Next Level</button>
+      <button id="hintBtn" data-en="Hint" data-zh="提示">Hint</button>
+    </div>
+  </div>
+</main>
+  </div>
+
+<script>
+// Language switching functionality (no reliance on event.target)
+function switchLanguage(lang) {
+  // Update button states
+  document.querySelectorAll('.lang-toggle button').forEach(btn => btn.classList.remove('active'));
+  const targetBtn = document.querySelector(`.lang-toggle button[onclick="switchLanguage('${lang}')"]`);
+  if (targetBtn) targetBtn.classList.add('active');
+  
+  // Update all elements with data attributes
+  document.querySelectorAll('[data-en][data-zh]').forEach(element => {
+    element.innerHTML = (lang === 'zh') ? element.getAttribute('data-zh') : element.getAttribute('data-en');
+  });
+  
+  // Update HTML lang attribute
+  document.documentElement.lang = (lang === 'zh') ? 'zh-Hant' : 'en';
+  
+  // Store language preference
+  localStorage.setItem('preferredLanguage', lang);
+  
+  // Refresh current level content with new language
+  const L = currentLevel();
+  if (L.type === 'story') {
+    drawStory();
+  } else {
+    drawCode();
+  }
+}
+
+// Load saved language preference on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+  if (savedLang === 'zh') {
+    // Update button states
+    document.querySelectorAll('.lang-toggle button').forEach(btn => btn.classList.remove('active'));
+    const zhBtn = document.querySelector(`.lang-toggle button[onclick="switchLanguage('zh')"]`);
+    if (zhBtn) zhBtn.classList.add('active');
+    // Update content
+    document.querySelectorAll('[data-en][data-zh]').forEach(element => {
+      element.innerHTML = element.getAttribute('data-zh');
+    });
+    document.documentElement.lang = 'zh-Hant';
+  }
+  
+  // Initialize navigation buttons
+  initializeNavigationButtons();
+  
+  // Initialize the game
+  const L = currentLevel();
+  if (L.type === 'story') {
+    drawStory();
+  } else {
+    drawCode();
+  }
+});
+
+// Navigation functions
+function nextLesson(){
+  window.location.href = '7. Conditions Game.html';
+}
+function backToIndex(){
+  window.location.href = '../index.html';
+}
+function initializeNavigationButtons(){
+  const nextLessonBtn = document.getElementById('nextLessonBtn');
+  if (nextLessonBtn) nextLessonBtn.addEventListener('click', nextLesson);
+  const backToIndexBtn = document.getElementById('backToIndexBtn');
+  if (backToIndexBtn) backToIndexBtn.addEventListener('click', backToIndex);
+}
+</script>
+
+<script>
+let lvl = 0;
+let storyComplete = false;
+
+const LEVELS = [
+  // 1: Simple if/else
+  {
+    type: 'story',
+    title: { en: '🌧️ Rain Check', zh: '🌧️ 雨天檢查' },
+    text: { 
+      en: 'You\'re about to leave home. It\'s raining outside. What should you do?',
+      zh: '你正要離開家。外面正在下雨。你應該怎麼做？'
+    },
+    options: [
+      { 
+        text: { 
+          en: 'if raining(): take_umbrella()', 
+          zh: 'if raining(): take_umbrella()<br/><small>如果下雨：拿雨傘</small>' 
+        }, 
+        correct: true 
+      },
+      { 
+        text: { 
+          en: 'if sunny(): take_umbrella()', 
+          zh: 'if sunny(): take_umbrella()<br/><small>如果晴天：拿雨傘</small>' 
+        }, 
+        correct: false 
+      },
+      { 
+        text: { 
+          en: 'always take_umbrella()', 
+          zh: 'always take_umbrella()<br/><small>總是拿雨傘</small>' 
+        }, 
+        correct: false 
+      }
+    ],
+    hint: { en: 'Check the condition first, then decide what to do.', zh: '先檢查條件，然後決定要做什麼。' }
+  },
+  // 2: if/elif/else
+  {
+    type: 'story',
+    title: { en: '🍕 Pizza Order', zh: '🍕 披薩訂購' },
+    text: { 
+      en: 'You\'re ordering pizza. If you have $20, get large. If you have $15, get medium. Otherwise get small.',
+      zh: '你正在訂披薩。如果你有20元，點大份。如果你有15元，點中份。否則點小份。'
+    },
+    options: [
+      { 
+        text: { 
+          en: 'if money >= 20: large; elif money >= 15: medium; else: small', 
+          zh: 'if money >= 20: large; elif money >= 15: medium; else: small<br/><small>如果錢>=20：大份；否則如果錢>=15：中份；否則：小份</small>' 
+        }, 
+        correct: true 
+      },
+      { 
+        text: { 
+          en: 'if money >= 15: medium; elif money >= 20: large; else: small', 
+          zh: 'if money >= 15: medium; elif money >= 20: large; else: small<br/><small>如果錢>=15：中份；否則如果錢>=20：大份；否則：小份</small>' 
+        }, 
+        correct: false 
+      },
+      { 
+        text: { 
+          en: 'if money >= 20: large; if money >= 15: medium; else: small', 
+          zh: 'if money >= 20: large; if money >= 15: medium; else: small<br/><small>如果錢>=20：大份；如果錢>=15：中份；否則：小份</small>' 
+        }, 
+        correct: false 
+      }
+    ],
+    hint: { en: 'Use elif to check multiple conditions in order.', zh: '使用 elif 按順序檢查多個條件。' }
+  },
+  // 3: while loop
+  {
+    type: 'story',
+    title: { en: '📚 Study Session', zh: '📚 學習時間' },
+    text: { 
+      en: 'You need to study until you understand the topic. How do you keep studying?',
+      zh: '你需要學習直到理解這個主題。你如何持續學習？'
+    },
+    options: [
+      { 
+        text: { 
+          en: 'while not_understood(): keep_studying()', 
+          zh: 'while not_understood(): keep_studying()<br/><small>當不理解時：繼續學習</small>' 
+        }, 
+        correct: true 
+      },
+      { 
+        text: { 
+          en: 'if not_understood(): keep_studying()', 
+          zh: 'if not_understood(): keep_studying()<br/><small>如果不理解：繼續學習</small>' 
+        }, 
+        correct: false 
+      },
+      { 
+        text: { 
+          en: 'repeat 5: keep_studying()', 
+          zh: 'repeat 5: keep_studying()<br/><small>重複5次：繼續學習</small>' 
+        }, 
+        correct: false 
+      }
+    ],
+    hint: { en: 'Use while to repeat until a condition is met.', zh: '使用 while 重複直到滿足條件。' }
+  },
+  // 4: Code practice - if/else
+  {
+    type: 'code',
+    title: { en: '🚦 Traffic Light', zh: '🚦 交通燈' },
+    prompt: { 
+      en: 'Write code: If the light is green, go. If red, stop. Otherwise (yellow), slow down.',
+      zh: '寫程式碼：如果燈是綠色，前進。如果是紅色，停止。否則（黃色），減速。'
+    },
+    solution: 'if light == "green":\n  go()\nelif light == "red":\n  stop()\nelse:\n  slow_down()',
+    hint: { en: 'Use if/elif/else to handle three different cases.', zh: '使用 if/elif/else 處理三種不同的情況。' }
+  },
+  // 5: Code practice - while
+  {
+    type: 'code',
+    title: { en: '🏃 Exercise Routine', zh: '🏃 運動例行' },
+    prompt: { 
+      en: 'Write code: Keep running while you have energy. When energy runs out, rest.',
+      zh: '寫程式碼：當你有體力時持續跑步。當體力耗盡時，休息。'
+    },
+    solution: 'while energy > 0:\n  run()\nrest()',
+    hint: { en: 'Use while to repeat until a condition changes.', zh: '使用 while 重複直到條件改變。' }
+  },
+  // 6: Code practice - complex
+  {
+    type: 'code',
+    title: { en: '🎮 Game Character', zh: '🎮 遊戲角色' },
+    prompt: { 
+      en: 'Write code: If health is low, use potion. Elif enemy nearby, attack. Elif treasure found, collect. Else, explore.',
+      zh: '寫程式碼：如果生命值低，使用藥水。如果敵人在附近，攻擊。如果發現寶藏，收集。否則，探索。'
+    },
+    solution: 'if health < 20:\n  use_potion()\nelif enemy_nearby():\n  attack()\nelif treasure_found():\n  collect()\nelse:\n  explore()',
+    hint: { en: 'Chain multiple conditions with if/elif/else.', zh: '使用 if/elif/else 鏈接多個條件。' }
+  }
+];
+
+function currentLevel(){ return LEVELS[lvl]; }
+
+function setFeedback(msg, cls){
+  const el = document.getElementById('storyFeedback');
+  el.className = cls ? cls : 'muted';
+  el.textContent = msg;
+}
+
+function setCodeFeedback(msg, cls){
+  const el = document.getElementById('codeFeedback');
+  el.className = cls ? cls : 'muted';
+  el.textContent = msg;
+}
+
+function updateLevelBadge(){
+  const badge = document.getElementById('lvl');
+  if (badge) badge.textContent = `Level ${lvl+1} / ${LEVELS.length}`;
+}
+
+function drawStory(){
+  const L = currentLevel();
+  updateLevelBadge();
+  
+  // Get current language
+  const currentLang = document.documentElement.lang === 'zh-Hant' ? 'zh' : 'en';
+  
+  // Update title and text with language-specific content
+  document.getElementById('storyTitle').textContent = L.title[currentLang] || L.title;
+  document.getElementById('storyText').textContent = L.text[currentLang] || L.text;
+  
+  const optionsDiv = document.getElementById('storyOptions');
+  optionsDiv.innerHTML = '';
+  L.options.forEach((opt) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = opt.text[currentLang] || opt.text;
+    btn.addEventListener('click', () => {
+      optionsDiv.querySelectorAll('.opt').forEach(b => b.classList.remove('correct', 'wrong'));
+      btn.classList.add(opt.correct ? 'correct' : 'wrong');
+      setFeedback(opt.correct ? 'Great choice! ✅' : 'Not quite. Try again.', opt.correct ? 'good' : 'bad');
+      if (opt.correct) {
+        storyComplete = true;
+        document.getElementById('nextBtn').classList.remove('hidden');
+      }
+    });
+    optionsDiv.appendChild(btn);
+  });
+  
+  setFeedback('Choose the best answer.', '');
+  document.getElementById('nextBtn').classList.add('hidden');
+  document.getElementById('storyCard').classList.remove('hidden');
+  document.getElementById('codeCard').classList.add('hidden');
+}
+
+function drawCode(){
+  const L = currentLevel();
+  updateLevelBadge();
+  
+  // Get current language
+  const currentLang = document.documentElement.lang === 'zh-Hant' ? 'zh' : 'en';
+  
+  // Update prompt with language-specific content
+  document.getElementById('codePrompt').textContent = L.prompt[currentLang] || L.prompt;
+  document.getElementById('code').value = '';
+  
+  const feedbackText = currentLang === 'zh' ? '在上方寫入你的程式碼，然後點擊檢查。' : 'Write your code above, then click Check.';
+  setCodeFeedback(feedbackText, '');
+  document.getElementById('nextBtn').classList.add('hidden');
+  document.getElementById('storyCard').classList.add('hidden');
+  document.getElementById('codeCard').classList.remove('hidden');
+}
+
+function checkCode(){
+  const userCode = document.getElementById('code').value.toLowerCase().trim();
+  const solution = currentLevel().solution.toLowerCase().trim();
+  
+  // Simple similarity check
+  const userLines = userCode.split('\n').map(l => l.trim()).filter(l => l);
+  const solutionLines = solution.split('\n').map(l => l.trim()).filter(l => l);
+  
+  let score = 0;
+  solutionLines.forEach(solLine => {
+    if (userLines.some(userLine => userLine.includes(solLine.split(':')[0]) && userLine.includes(':'))) {
+      score++;
+    }
+  });
+  
+  const threshold = Math.ceil(solutionLines.length * 0.7);
+  if (score >= threshold) {
+    setCodeFeedback('Great job! Your code looks correct. ✅', 'good');
+    document.getElementById('nextBtn').classList.remove('hidden');
+  } else {
+    setCodeFeedback(`Keep trying! You got ${score}/${solutionLines.length} parts right.`, 'bad');
+  }
+}
+
+function showHint(){
+  const L = currentLevel();
+  if (L.hint) {
+    if (L.type === 'story') {
+      setFeedback(L.hint, '');
+    } else {
+      setCodeFeedback(L.hint, '');
+    }
+  }
+}
+
+// Event listeners
+document.getElementById('checkCodeBtn').addEventListener('click', checkCode);
+document.getElementById('resetCodeBtn').addEventListener('click', () => {
+  document.getElementById('code').value = '';
+  setCodeFeedback('Code cleared. Try again!', '');
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if (lvl < LEVELS.length - 1) {
+    lvl++;
+    storyComplete = false;
+    const L = currentLevel();
+    if (L.type === 'story') {
+      drawStory();
+    } else {
+      drawCode();
+    }
+  } else {
+    setFeedback('Congratulations! You completed all levels! 🎉', 'good');
+  }
+});
+document.getElementById('hintBtn').addEventListener('click', showHint);
+</script>
+</body>
+</html>

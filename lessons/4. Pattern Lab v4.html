@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Pattern Pals — Pattern Lab</title>
+<style>
+  :root{
+    --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --panel:#ffffff;      
+    --ink:#0f172a;        
+    --muted:#475569;      
+    --accent:#2563eb;     
+    --accent-2:#22c55e;   
+    --accent-3:#f59e0b;   
+    --accent-4:#ef4444;   
+    --accent-5:#8b5cf6;   
+    --line:#cbd5e1;       
+    --chip:#eef2ff;
+    --shadow: 0 10px 25px rgba(0,0,0,0.1);
+    --shadow-hover: 0 20px 40px rgba(0,0,0,0.15);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    color:var(--ink); background:var(--bg); min-height:100vh;
+  }
+  .wrap{max-width:1000px; margin-inline:auto; padding:24px;}
+
+  header{
+    display:flex; align-items:center; gap:16px; margin-bottom:24px; 
+    background:rgba(255,255,255,0.95); padding:20px; border-radius:20px; 
+    box-shadow:var(--shadow); backdrop-filter:blur(10px);
+  }
+  header .logo{
+    width:60px;height:60px; border-radius:16px; 
+    background:linear-gradient(135deg,var(--accent),#60a5fa); 
+    display:grid; place-items:center; color:#fff; font-weight:800; font-size:24px;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+  }
+  header h1{margin:0;font-size:clamp(24px,4vw,36px);} 
+  header .subtitle{margin:4px 0 0; color:var(--muted); font-size:16px;}
+
+  /* Language toggle */
+  .lang-toggle{
+    margin-left:auto; display:flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,0.1); padding:8px 16px; 
+    border-radius:20px; border:1px solid rgba(0,0,0,0.08);
+    backdrop-filter:blur(10px); transition:all 0.3s ease;
+  }
+  .lang-toggle button{
+    background:none; border:none; color:var(--ink); font-size:14px; 
+    font-weight:600; padding:4px 8px; border-radius:8px; 
+    cursor:pointer; transition:all 0.2s ease;
+  }
+  .lang-toggle button.active{
+    background:var(--accent); color:#fff; box-shadow:0 2px 8px rgba(37, 99, 235, 0.3);
+  }
+  .lang-toggle button:not(.active):hover{background:rgba(37,99,235,0.1); color:var(--accent);}  
+
+  .card{
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    border:2px solid var(--line);
+    border-radius:16px; padding:20px; margin-bottom:20px;
+    box-shadow:var(--shadow); backdrop-filter:blur(5px);
+  }
+  .row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .hint{background:#fff; border-left:6px solid var(--accent); padding:12px; border-radius:12px; margin-top:12px;}
+  .good{color:var(--accent-2); font-weight:700;}
+  .bad{color:var(--accent-4); font-weight:700;}
+  .warn{color:var(--accent-3); font-weight:700;}
+  .pattern { font-size:28px; letter-spacing:6px; }
+  .choices button { min-width:64px; }
+  .pill { background:var(--ink); color:#fff; border-radius:999px; padding:4px 10px; font-size:14px; }
+  .codebox { background:#0b1020; color:#e5e7eb; padding:12px; border-radius:10px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow:auto; }
+  .note { font-size:16px; }
+  .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:#fff; border-radius:6px; padding:2px 6px; border:1px solid var(--ink); }
+  .mascot { font-size:36px; }
+  
+  /* Navigation buttons - consistent sizing */
+  .back-btn, .next-lesson-btn, .back-to-index-btn{
+    background:var(--accent); color:#fff; border:none; padding:12px 20px; 
+    border-radius:12px; font-weight:600; cursor:pointer; transition:all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    min-width: 140px; height: 48px; justify-content: center;
+  }
+  .back-btn:hover{
+    background:#1d4ed8; transform:translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+  }
+  
+  /* Next Lesson button specific styling */
+  .next-lesson-btn{
+    background:var(--accent-5); 
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  }
+  .next-lesson-btn:hover{
+    background:#7c3aed; transform:translateY(-2px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+  }
+  
+  /* Back to All Lessons button specific styling */
+  .back-to-index-btn{
+    background:var(--accent-2); 
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  }
+  .back-to-index-btn:hover{
+    background:#16a34a; transform:translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+  }
+  
+  .btn{
+    display:inline-block; 
+    background:linear-gradient(135deg,var(--accent),#60a5fa);
+    color:#fff; font-weight:600; text-decoration:none; 
+    padding:12px 18px; border-radius:12px; 
+    box-shadow:0 6px 14px rgba(37,99,235,0.3); transition:all .3s;
+    border: none; cursor: pointer; font-size: 16px;
+  }
+  .btn:hover{transform:translateY(-2px); box-shadow:var(--shadow-hover);} 
+  .btn.small{padding:6px 12px; font-size:14px;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo" aria-hidden="true">🧩</div>
+      <div>
+        <h1 id="title" data-en="Pattern Pals" data-zh="規律好朋友">Pattern Pals</h1>
+        <div class="subtitle" id="subtitle" data-en="Goal: Find the rule and pick the next item." data-zh="目標：找出規律，選出下一個。">Goal: Find the rule and pick the next item.</div>
+      </div>
+      <div class="lang-toggle">
+        <button id="langEn" class="active" data-lang="en">EN</button>
+        <button id="langZh" data-lang="zh">繁體</button>
+      </div>
+    </header>
+
+    <div style="margin-bottom: 20px; display: flex; gap: 12px; align-items: center;">
+      <a href="3. Debugging Robot Route.html" class="back-btn">
+        ← <span data-en="Previous Lesson" data-zh="上一課">Previous Lesson</span>
+      </a>
+      <a href="5. Pattern Game.html" class="next-lesson-btn" data-en="Next Lesson →" data-zh="下一課 →">Next Lesson →</a>
+      <a href="../index.html" class="back-to-index-btn" data-en="Back to All Lessons" data-zh="返回首頁">Back to All Lessons</a>
+    </div>
+
+    <main>
+  <div class="card">
+    <div class="row" style="gap:12px;">
+      <span class="mascot" aria-hidden="true">🤖</span>
+      <div>
+        <div id="learnText" class="sm">Learn: <em>Pattern recognition &amp; generalization</em>. Why: Spot rules to write shorter code and predict results.</div>
+        <div id="controlText" class="sm">Press <span class="kbd">1–4</span> to choose, <span class="kbd">H</span> for hint, <span class="kbd">E</span> for explain, <span class="kbd">N</span> for a new set.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <strong id="levelLabel">Level <span id="lvl">1</span>/12</strong>
+      <button id="hintBtn">Hint</button>
+      <button id="explainBtn">Explain</button>
+      <button id="newBtn">New Set</button>
+      <span id="modeTag" class="pill">Mixed rules</span>
+    </div>
+    <div id="hint" class="hint mt" hidden></div>
+    <div id="pattern" class="pattern mt" aria-live="polite"></div>
+    <div id="choices" class="choices row mt"></div>
+    <div id="feedback" class="mt" aria-live="polite"></div>
+    <div id="explain" class="codebox mt" hidden></div>
+  </div>
+
+  <div class="card">
+    <p class="note" id="conceptText"><strong>Concept:</strong> Many patterns are loops. Use <em>modulo (%)</em> to find where you are in the loop.</p>
+    <p class="sm" id="tipText">Tip: If a block repeats every <em>k</em>, the next index is <span class="kbd">n % k</span>.</p>
+  </div>
+    </main>
+  </div>
+
+<script>
+// ====== I18N ======
+const I18N = {
+  en: {
+    title: "🧩 Pattern Pals",
+    subtitle: "Goal: Find the rule and pick the next item.",
+    learn: "Learn: <em>Pattern recognition &amp; generalization</em>. Why: Spot rules to write shorter code and predict results.",
+    controls: "Press <span class='kbd'>1–4</span> to choose, <span class='kbd'>H</span> for hint, <span class='kbd'>E</span> for explain, <span class='kbd'>N</span> for a new set.",
+    level: n => `Level ${n}/12`,
+    hint: s => "Hint: " + s,
+    correct: rule => `✅ Correct! Rule: ${rule} Next…`,
+    done: "🎉 You finished! Press New Set for more!",
+    notYet: (h) => `❌ Not yet. Try to say the rule in words. ${h}`,
+    explainTitle: "How it works:",
+    mode: "Mixed rules",
+    btn: { hint:"Hint", explain:"Explain", new:"New Set" },
+    concept: "<strong>Concept:</strong> Many patterns are loops. Use <em>modulo (%)</em> to find where you are in the loop.",
+    tip: "Tip: If a block repeats every <em>k</em>, the next index is <span class='kbd'>n % k</span>."
+  },
+  zh: {
+    title: "🧩 規律好朋友",
+    subtitle: "目標：找出規律，選出下一個。",
+    learn: "學習：<em>規律辨識與推廣</em>。為什麼：找出規律可讓程式更短，也能預測結果。",
+    controls: "按 <span class='kbd'>1–4</span> 選擇，<span class='kbd'>H</span> 提示，<span class='kbd'>E</span> 解說，<span class='kbd'>N</span> 新題。",
+    level: n => `第 ${n}/12 關`,
+    hint: s => "提示：" + s,
+    correct: rule => `✅ 正確！規律：${rule} 下一題…`,
+    done: "🎉 全部通過！按「新題」繼續挑戰！",
+    notYet: (h) => `❌ 先別急。試著用話說出規律。${h}`,
+    explainTitle: "解說：",
+    mode: "混合規律",
+    btn: { hint:"提示", explain:"解說", new:"新題" },
+    concept: "<strong>概念：</strong> 很多規律是「循環」。可用取餘數（%）找目前位置。",
+    tip: "小撇步：若每 <em>k</em> 個重複，下一個位置常可用 <span class='kbd'>n % k</span>。"
+  }
+};
+
+let LANG = localStorage.getItem("preferredLanguage") || "en"; // "en" or "zh"
+
+// ====== Game logic ======
+const SYM = ["▲","●","■","★","◆","◇","♥"];
+function rand(a){ return a[Math.floor(Math.random()*a.length)]; }
+function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+function makeSeq(kind){
+  if(kind==="AB"){ const A=rand(SYM), B=rand(SYM.filter(s=>s!==A)); const seq=[A,B,A,B,A]; return {seq, answer:B, rule_en:"ABAB… two items alternate", rule_zh:"ABAB… 兩個符號輪流出現", hint_en:"Two items alternate.", hint_zh:"兩個符號輪流。", explain:()=>`repeat block: [A,B]\nindex % 2 -> next\n重複區塊：[A,B]\n索引 % 2 → 下一個`}; }
+  if(kind==="AAB"){ const A=rand(SYM), B=rand(SYM.filter(s=>s!==A)); const seq=[A,A,B,A,A,B]; return {seq, answer:A, rule_en:"AAB repeats (block size 3)", rule_zh:"AAB 重複（每 3 個一循環）", hint_en:"Group size is 3.", hint_zh:"每組 3 個。", explain:()=>`block = [A,A,B]\n(k = 3) use n % 3\n區塊 = [A,A,B]\n(k = 3) 用 n % 3`}; }
+  if(kind==="ABC"){ const A=rand(SYM), B=rand(SYM.filter(s=>s!==A)), C=rand(SYM.filter(s=>s!==A && s!==B)); const seq=[A,B,C,A,B]; return {seq, answer:C, rule_en:"ABC repeats (cycle of 3)", rule_zh:"ABC 重複（3 個一循環）", hint_en:"Three-item cycle.", hint_zh:"三個一循環。", explain:()=>`cycle = [A,B,C]\n(k = 3) next = cycle[n % 3]\n循環 = [A,B,C]\n(k = 3) 下一個 = cycle[n % 3]`}; }
+  if(kind==="ARITH"){ const start = randInt(1,9); const step = randInt(1,5); const seq=[start, start+step, start+2*step, start+3*step]; return {seq, answer:start+4*step, rule_en:`+${step} each time (arithmetic)`, rule_zh:`每次 +${step}（等差）`, hint_en:"Look at the difference.", hint_zh:"看相鄰差值。", explain:()=>`a(n) = start + n*step\n等差：a(n) = 起點 + n×步長`}; }
+  if(kind==="ALTSTEP"){ const start = randInt(1,10); const a = randInt(1,4), b = randInt(2,6); const seq=[start, start+a, start+a+b, start+2*a+b, start+2*a+2*b]; return {seq, answer:start+3*a+2*b, rule_en:`+${a}, +${b} alternating`, rule_zh:`交替加 ${a}、${b}`, hint_en:"Two different jumps repeat.", hint_zh:"兩種跳法交替。", explain:()=>`steps: +${a}, +${b}, +${a}, +${b}, ...\n用兩種步長交替相加`}; }
+  if(kind==="GROW"){ const a=rand(SYM), b=rand(SYM.filter(s=>s!==a)), c=rand(SYM.filter(s=>s!==a && s!==b)); const seq=[a, a+b, a+b+c, a+b+c+a]; return {seq, answer:a+b+c+a+b, rule_en:"Block grows by adding one symbol", rule_zh:"每次多加一個符號，形成成長區塊", hint_en:"Each term adds the next symbol.", hint_zh:"每項都加上下一個符號。", explain:()=>`s(0)=A\ns(1)=A+B\ns(2)=A+B+C\n每一步把下一個符號接在後面`}; }
+  if(kind==="MIRROR"){ const a=rand(SYM), b=rand(SYM.filter(s=>s!==a)); const seq=[a,b,b,a,b]; return {seq, answer:b, rule_en:"Mirror symmetry / palindrome parts", rule_zh:"鏡像對稱／回文片段", hint_en:"Read from ends inward.", hint_zh:"從兩端向中間看。", explain:()=>`pattern: A B | B A | B ...\n對稱：左 A 對右 A，左 B 對右 B`}; }
+  if(kind==="EVENODD"){ const A=rand(SYM), B=rand(SYM.filter(s=>s!==A)); const seq=[A,2,B,4,A,6,B]; return {seq, answer:8, rule_en:"Even numbers go up by 2; symbols alternate", rule_zh:"偶數每次 +2；符號交替", hint_en:"Even numbers go up by 2.", hint_zh:"偶數遞增 2。", explain:()=>`numbers: 2,4,6,8 ... (+2)\nsymbols: A,B,A,B ...\n數字與符號各自有規律`}; }
+  if(kind==="IFTHEN"){ const A=rand(SYM), B=rand(SYM.filter(s=>s!==A)); const seq=[A,2,B,4,A,6]; return {seq, answer:B, rule_en:"If item is a number, add 2 next; if symbol, alternate A↔B", rule_zh:"若為數字，下個 +2；若為符號，在 A/B 間交替", hint_en:"Two rules: numbers and symbols behave differently.", hint_zh:"兩套規則：數字與符號不同。", explain:()=>`if isNumber(x): next = x + 2\nelse: next = (x==A? B: A)\n如果是數字 → +2；否則在 A/B 間切換`}; }
+  if(kind==="MODCOLOR"){ const base = randInt(1,6), step = randInt(2,4); const names = ["RED","GREEN","BLUE","YELLOW"]; const seq=[base, base+step, base+2*step, base+3*step].map(n=> `${n}·${names[n % 4]}`); return {seq, answer:`${base+4*step}·${names[(base+4*step)%4]}`, rule_en:"Numbers +step; color = number % 4", rule_zh:"數字加固定步長；顏色 = 數字 % 4", hint_en:"Check +? and the color word pattern.", hint_zh:"看數字差值與顏色字詞。", explain:()=>`value: start + k*step\nlabel: names[value % 4]\n數值依等差前進；標籤用 value % 4`}; }
+  if(kind==="NESTED"){ const A=rand(SYM), B=rand(SYM.filter(s=>s!==A)); const seq=[A,B,A,B, B,A]; return {seq, answer:A, rule_en:"AB repeats; every 4th flips to mirror", rule_zh:"AB 重複；每逢第 4 位切到鏡像", hint_en:"Look near the 4th item.", hint_zh:"注意第 4 個附近。", explain:()=>`if i%4==0 then mirror next two\n平常 ABAB…；每逢 4 的倍數鏡像兩步`}; }
+  return makeSeq("AB");
+}
+const KINDS=["AB","AAB","ABC","ARITH","ALTSTEP","GROW","MIRROR","EVENODD","IFTHEN","MODCOLOR","NESTED"];
+let level=0; let rounds=[];
+const TOTAL=12;
+
+function freshRounds(){ rounds=[...Array(TOTAL)].map(()=> makeSeq(rand(KINDS))); level=0; }
+
+function makeChoices(ans){
+  const set = new Set([ans]);
+  while(set.size<4){
+    let pick;
+    if(typeof ans==="number" || (typeof ans==="string" && /^\d+/.test(ans))){
+      const n = typeof ans==="number" ? ans : parseInt(ans.split("·")[0],10);
+      const delta = randInt(-6,6);
+      if(typeof ans==="number"){
+        pick = Math.max(0, n + delta);
+      } else {
+        const names=["RED","GREEN","BLUE","YELLOW"];
+        const newN = Math.max(0, n + delta);
+        pick = `${newN}·${names[newN % 4]}`;
+      }
+    } else {
+      pick = rand(SYM);
+    }
+    set.add(pick);
+  }
+  return Array.from(set).sort(()=>Math.random()-0.5);
+}
+
+// ====== Rendering & Text ======
+function setTexts(){
+  const t = I18N[LANG];
+  document.title = t.title + " — Pattern Lab";
+  document.getElementById('title').textContent = t.title;
+  document.getElementById('subtitle').textContent = t.subtitle;
+  document.getElementById('learnText').innerHTML = t.learn;
+  document.getElementById('controlText').innerHTML = t.controls;
+  document.getElementById('modeTag').textContent = t.mode;
+  document.getElementById('hintBtn').textContent = t.btn.hint;
+  document.getElementById('explainBtn').textContent = t.btn.explain;
+  document.getElementById('newBtn').textContent = t.btn.new;
+  document.getElementById('levelLabel').innerHTML = t.level(level+1);
+  document.getElementById('conceptText').innerHTML = t.concept;
+  document.getElementById('tipText').innerHTML = t.tip;
+  
+  // Update navigation button text
+  const prevLessonSpan = document.querySelector('.back-btn span');
+  if (prevLessonSpan) {
+    prevLessonSpan.textContent = LANG === 'zh' ? '上一課' : 'Previous Lesson';
+  }
+  
+  const nextLessonBtn = document.querySelector('.next-lesson-btn');
+  if (nextLessonBtn) {
+    nextLessonBtn.textContent = LANG === 'zh' ? '下一課 →' : 'Next Lesson →';
+  }
+  
+  const backToIndexBtn = document.querySelector('.back-to-index-btn');
+  if (backToIndexBtn) {
+    backToIndexBtn.textContent = LANG === 'zh' ? '返回首頁' : 'Back to All Lessons';
+  }
+}
+function render(){
+  setTexts();
+  const L=rounds[level];
+  const pattern=document.getElementById('pattern');
+  pattern.textContent=L.seq.join(" ");
+  const choicesEl=document.getElementById('choices'); choicesEl.innerHTML="";
+  const opts = makeChoices(L.answer);
+  opts.forEach((o,idx)=>{ 
+    const b=document.createElement('button'); 
+    b.textContent=o; 
+    b.setAttribute('data-index', idx+1);
+    b.onclick=()=>check(o); 
+    choicesEl.appendChild(b); 
+  });
+  const hintEl=document.getElementById('hint');
+  hintEl.hidden=true;
+  const hintText = (LANG==="en")?L.hint_en:L.hint_zh;
+  hintEl.textContent= I18N[LANG].hint(hintText);
+  document.getElementById('feedback').textContent="";
+  document.getElementById('explain').hidden=true;
+  document.getElementById('explain').textContent="";
+  document.getElementById('lvl').textContent = level+1;
+}
+
+function showExplain(){
+  const L=rounds[level];
+  const ex=document.getElementById('explain');
+  ex.hidden=false;
+  const rule = (LANG==="en")?L.rule_en:L.rule_zh;
+  const head = I18N[LANG].explainTitle;
+  const body = L.explain? L.explain(): "";
+  ex.textContent = `${head}\n${rule}\n\n${body}`;
+}
+
+// ====== Checking ======
+function check(o){
+  const L=rounds[level]; 
+  const fb=document.getElementById('feedback');
+  const hintText = (LANG==="en")?L.hint_en:L.hint_zh;
+  if(String(o)===String(L.answer)){
+    if(level<TOTAL-1){ 
+      fb.innerHTML=`<span class='good'>${I18N[LANG].correct((LANG==="en")?L.rule_en:L.rule_zh)}</span>`; 
+      level++;
+      setTimeout(()=>{ render(); }, 900); 
+    } else {
+      fb.innerHTML=`<span class='good'>${I18N[LANG].done}</span>`;
+    }
+  } else {
+    // constructive hint
+    let why = "";
+    if(typeof L.answer==="number" && typeof o==="number"){
+      const diff = o - L.seq[L.seq.length-1];
+      const realDiff = L.answer - L.seq[L.seq.length-1];
+      if(Math.abs(diff-realDiff)<=2){
+        why = (LANG==="en")?` Close! You added ${diff}, but the pattern needs ${realDiff}.`:` 接近了！你加了 ${diff}，但規律需要加 ${realDiff}。`;
+      }
+    }
+    fb.innerHTML=`<span class='bad'>${I18N[LANG].notYet(I18N[LANG].hint(hintText))}</span>${why}`;
+  }
+}
+
+// ====== Language switching ======
+function switchLanguage(lang) {
+  LANG = lang;
+  localStorage.setItem('preferredLanguage', lang);
+  
+  // Update button states
+  document.querySelectorAll('.lang-toggle button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.getElementById(`lang${lang === 'en' ? 'En' : 'Zh'}`).classList.add('active');
+  
+  // Update content
+  setTexts();
+  render();
+}
+
+// ====== Controls ======
+document.getElementById('hintBtn').onclick=()=>{ document.getElementById('hint').hidden=false; };
+document.getElementById('explainBtn').onclick=()=>{ showExplain(); };
+document.getElementById('newBtn').onclick=()=>{ freshRounds(); render(); };
+
+// Language toggle buttons
+document.getElementById('langEn').onclick = () => switchLanguage('en');
+document.getElementById('langZh').onclick = () => switchLanguage('zh');
+
+// Keyboard shortcuts
+window.addEventListener('keydown', (e)=>{
+  if(e.key>="1" && e.key<="4"){
+    const idx=parseInt(e.key,10);
+    const btn = document.querySelector(`.choices button[data-index="${idx}"]`);
+    if(btn){ btn.click(); }
+  } else if(e.key==="h" || e.key==="H"){
+    document.getElementById('hintBtn').click();
+  } else if(e.key==="e" || e.key==="E"){
+    document.getElementById('explainBtn').click();
+  } else if(e.key==="n" || e.key==="N"){
+    document.getElementById('newBtn').click();
+  }
+});
+
+// Load saved language preference on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+  if (savedLang === 'zh') {
+    // Update button states
+    document.querySelectorAll('.lang-toggle button').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    document.getElementById('langZh').classList.add('active');
+    
+    // Update content
+    LANG = 'zh';
+    setTexts();
+  }
+  
+});
+
+// Init
+freshRounds();
+setTexts();
+render();
+</script>
+</body>
+</html>

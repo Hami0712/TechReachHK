@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TechReach HK – Complete Learning Journey</title>
+  <style>
+    :root{
+      --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --panel:#ffffff;      
+      --ink:#0f172a;        
+      --muted:#475569;      
+      --accent:#2563eb;     
+      --accent-2:#22c55e;   
+      --accent-3:#f59e0b;   
+      --accent-4:#ef4444;   
+      --accent-5:#8b5cf6;   
+      --line:#cbd5e1;       
+      --chip:#eef2ff;
+      --shadow: 0 10px 25px rgba(0,0,0,0.1);
+      --shadow-hover: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--ink); background:var(--bg); min-height:100vh;
+    }
+    .wrap{max-width:1200px; margin-inline:auto; padding:24px;}
+    header{
+      display:flex; align-items:center; gap:20px; margin-bottom:32px; 
+      background:rgba(255,255,255,0.95); padding:24px; border-radius:20px; 
+      box-shadow:var(--shadow); backdrop-filter:blur(10px);
+    }
+    header .logo{
+      width:60px;height:60px; border-radius:16px; 
+      background:linear-gradient(135deg,var(--accent),#60a5fa); 
+      display:grid; place-items:center; color:#fff; font-weight:800; font-size:24px;
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+    }
+    h1{font-size:clamp(28px,4vw,42px); margin:0; background:linear-gradient(135deg,var(--accent),var(--accent-2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;}
+    .subtitle{color:var(--muted); margin-top:8px; font-size:18px;}
+
+    /* Language toggle */
+    .lang-toggle{
+      margin-left:auto; display:flex; align-items:center; gap:8px;
+      background:rgba(255,255,255,0.1); padding:8px 16px; 
+      border-radius:20px; border:1px solid rgba(255,255,255,0.2);
+      backdrop-filter:blur(10px); transition:all 0.3s ease;
+    }
+    .lang-toggle:hover{background:rgba(255,255,255,0.2);}
+    .lang-toggle button{
+      background:none; border:none; color:var(--ink); font-size:14px; 
+      font-weight:600; padding:4px 8px; border-radius:8px; 
+      cursor:pointer; transition:all 0.2s ease;
+    }
+    .lang-toggle button.active{
+      background:var(--accent); color:#fff; box-shadow:0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+    .lang-toggle button:not(.active):hover{
+      background:rgba(37, 99, 235, 0.1); color:var(--accent);
+    }
+
+    /* Lesson grid */
+    .grid{margin-top:24px; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px}
+    .card{
+      display:block; background:var(--panel); border:2px solid var(--line); 
+      border-radius:16px; padding:20px; text-decoration:none; color:inherit; 
+      box-shadow:var(--shadow); transition:all 0.3s ease;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+      backdrop-filter: blur(5px);
+    }
+    .card:hover, .card:focus-visible{
+      transform:translateY(-4px); box-shadow:var(--shadow-hover); 
+      border-color:var(--accent); outline:none;
+    }
+    .num{
+      display:inline-grid; place-items:center; width:36px; height:36px; 
+      border-radius:12px; background:linear-gradient(135deg,var(--accent),#60a5fa); 
+      color:#fff; font-weight:700; margin-right:12px; font-size:16px;
+      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+    }
+    .title{font-weight:700; font-size:18px; margin-bottom:4px;}
+    .cap{font-size:14px; color:var(--muted); margin-top:6px; line-height:1.4;}
+    
+    /* Special styling for different lesson types */
+    .card.foundation .num{background:linear-gradient(135deg,var(--accent),#60a5fa);}
+    .card.programming .num{background:linear-gradient(135deg,var(--accent-2),#4ade80);}
+    .card.debugging .num{background:linear-gradient(135deg,var(--accent-3),#fbbf24);}
+    .card.patterns .num{background:linear-gradient(135deg,var(--accent-4),#f87171);}
+    .card.conditions .num{background:linear-gradient(135deg,var(--accent-5),#a78bfa);}
+    .card.logic .num{background:linear-gradient(135deg,#ec4899,#f472b6);}
+    .card.final .num{background:linear-gradient(135deg,#10b981,#34d399);}
+
+    footer{margin:40px 0 20px; padding:24px; background:rgba(255,255,255,0.1); border-radius:16px; backdrop-filter:blur(10px);}
+    footer div{color:rgba(255,255,255,0.9); font-size:16px; margin-bottom:8px;}
+    footer .sub{color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:12px;}
+    footer .tip{color:rgba(255,255,255,0.6); font-size:13px;}
+
+    /* Small helper for reduced-motion users */
+    @media (prefers-reduced-motion: reduce){
+      .card{transition:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo" aria-hidden="true">🚀</div>
+      <div>
+        <h1 data-en="TechReach HK" data-zh="科技達人香港">TechReach HK</h1>
+        <div class="subtitle" data-en="Complete learning journey from basics to advanced programming concepts" data-zh="從基礎到高級編程概念的完整學習之旅">Complete learning journey from basics to advanced programming concepts</div>
+      </div>
+      <div class="lang-toggle">
+        <button class="active" onclick="switchLanguage('en')">EN</button>
+        <button onclick="switchLanguage('zh')">繁中</button>
+      </div>
+    </header>
+
+    <section aria-labelledby="all-lessons">
+      <h2 id="all-lessons" style="margin:24px 0 16px; font-size:clamp(20px,2.5vw,28px); color:#ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.3);" data-en="All Lessons & Activities" data-zh="所有課程與活動">All Lessons & Activities</h2>
+      
+      <h3 style="margin:24px 0 12px; color:#ffffff; font-size:18px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);" data-en="🎯 Main Learning Path" data-zh="🎯 主要學習路徑">🎯 Main Learning Path</h3>
+      <div class="grid">
+        <a class="card foundation" href="lessons/1. Robot Route - Arrows Only.html">
+          <span class="num">1</span>
+          <span class="title" data-en="Robot Route" data-zh="機器人路線">Robot Route - Arrows Only</span>
+          <div class="cap" data-en="Learn basic movement and navigation concepts" data-zh="學習基本移動和導航概念">Learn basic movement and navigation concepts</div>
+        </a>
+        <a class="card programming" href="lessons/2. Robot Route - Programming.html">
+          <span class="num">2</span>
+          <span class="title" data-en="Robot Route - Programming" data-zh="機器人路線 - 編程模式">Robot Route - Programming</span>
+          <div class="cap" data-en="Write your first programs with commands" data-zh="用指令編寫你的第一個程式">Write your first programs with commands</div>
+        </a>
+        <a class="card debugging" href="lessons/3. Debugging Robot Route.html">
+          <span class="num">3</span>
+          <span class="title" data-en="Debugging Robot Route" data-zh="除錯機器人路線">Debugging Robot Route</span>
+          <div class="cap" data-en="Find and fix errors in programs" data-zh="找出並修復程式中的錯誤">Find and fix errors in programs</div>
+        </a>
+        <a class="card patterns" href="lessons/4. Pattern Lab v4.html">
+          <span class="num">4</span>
+          <span class="title" data-en="Pattern Lab v4" data-zh="模式實驗室 v4">Pattern Lab v4</span>
+          <div class="cap" data-en="Discover patterns and create loops" data-zh="發現模式並創建循環">Discover patterns and create loops</div>
+        </a>
+        <a class="card patterns" href="lessons/5. Pattern Game.html">
+          <span class="num">5</span>
+          <span class="title" data-en="Pattern Game" data-zh="模式遊戲">Pattern Game</span>
+          <div class="cap" data-en="Apply patterns to solve challenges" data-zh="運用模式解決挑戰">Apply patterns to solve challenges</div>
+        </a>
+        <a class="card conditions" href="lessons/6. Conditions Life Game.html">
+          <span class="num">6</span>
+          <span class="title" data-en="Conditions Life Game" data-zh="條件生活遊戲">Conditions Life Game</span>
+          <div class="cap" data-en="Learn if/else logic with life scenarios" data-zh="通過生活情境學習if/else邏輯">Learn if/else logic with life scenarios</div>
+        </a>
+        <a class="card conditions" href="lessons/7. Conditions Game.html">
+          <span class="num">7</span>
+          <span class="title" data-en="Conditions Game" data-zh="條件遊戲">Conditions Game</span>
+          <div class="cap" data-en="Master conditional programming" data-zh="掌握條件編程">Master conditional programming</div>
+        </a>
+        <a class="card logic" href="lessons/8. AND OR NOT Logic.html">
+          <span class="num">8</span>
+          <span class="title" data-en="AND OR NOT Logic" data-zh="AND OR NOT 邏輯">AND OR NOT Logic</span>
+          <div class="cap" data-en="Learn boolean logic with switches" data-zh="通過開關學習布爾邏輯">Learn boolean logic with switches</div>
+        </a>
+        <a class="card logic" href="lessons/9. Smart Home AND OR NOT.html">
+          <span class="num">9</span>
+          <span class="title" data-en="Smart Home Logic" data-zh="智能家居邏輯">Smart Home Logic</span>
+          <div class="cap" data-en="Apply logic to real-world scenarios" data-zh="將邏輯應用到現實情境">Apply logic to real-world scenarios</div>
+        </a>
+        <a class="card final" href="lessons/10. Final Project - Maze Navigator.html">
+          <span class="num">10</span>
+          <span class="title" data-en="Final Project" data-zh="最終專案">Final Project</span>
+          <div class="cap" data-en="Master challenge: Navigate any maze!" data-zh="終極挑戰：導航任何迷宮！">Master challenge: Navigate any maze!</div>
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <div data-en="🎓 <strong>Learning Journey Complete!</strong>" data-zh="🎓 <strong>學習之旅完成！</strong>">🎓 <strong>Learning Journey Complete!</strong></div>
+      <div class="sub" data-en="Follow the main learning path from 1-10 for the best experience." data-zh="按照1-10的主要學習路徑獲得最佳體驗。">Follow the main learning path from 1-10 for the best experience.</div>
+      <div class="tip" data-en="💡 Tip: Each lesson builds on the previous one. Take your time and practice each concept!" data-zh="💡 提示：每課都建立在前一課的基礎上。慢慢來，練習每個概念！">💡 Tip: Each lesson builds on the previous one. Take your time and practice each concept!</div>
+    </footer>
+  </div>
+
+  <script>
+    // Language switching functionality
+    function switchLanguage(lang) {
+      // Update button states
+      document.querySelectorAll('.lang-toggle button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Update all elements with data attributes
+      document.querySelectorAll('[data-en][data-zh]').forEach(element => {
+        if (lang === 'zh') {
+          element.innerHTML = element.getAttribute('data-zh');
+        } else {
+          element.innerHTML = element.getAttribute('data-en');
+        }
+      });
+      
+      // Update HTML lang attribute
+      document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+      
+      // Store language preference
+      localStorage.setItem('preferredLanguage', lang);
+    }
+    
+    // Load saved language preference on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+      if (savedLang === 'zh') {
+        // Update button states
+        document.querySelectorAll('.lang-toggle button').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector('.lang-toggle button[onclick="switchLanguage(\'zh\')"]').classList.add('active');
+        
+        // Update content
+        document.querySelectorAll('[data-en][data-zh]').forEach(element => {
+          element.innerHTML = element.getAttribute('data-zh');
+        });
+        document.documentElement.lang = 'zh-Hant';
+      }
+    });
+  </script>
+</body>
+</html>
